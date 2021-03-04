@@ -50,8 +50,8 @@ public class TransferSqlDAO implements TransferDAO{
                 "(SELECT transfer_status_id FROM transfer_statuses WHERE transfer_status_desc = ?), " +
                 "(SELECT user_id FROM users WHERE username = ?), " +
                 "(SELECT user_id FROM users WHERE username = ?), ?)";
-        jdbcTemplate.update(sqlCreateTransfer, transfer.getTransferType(), transfer.getTransferStatus(), transfer.getHumanFrom(),
-                transfer.getHumanTo(), transfer.getAmount());
+        jdbcTemplate.update(sqlCreateTransfer, transfer.getTransferType(), transfer.getTransferStatus(), transfer.getFromUser(),
+                transfer.getToUser(), transfer.getAmount());
     }
 
     private Transfer mapRowToTransfer(SqlRowSet rowSet){
@@ -60,12 +60,12 @@ public class TransferSqlDAO implements TransferDAO{
         transfer.setTransferType(rowSet.getString("transfer_type_desc"));
 
         if(transfer.getTransferType().equals("Send")) {
-            transfer.setHumanTo(rowSet.getString("username"));
-            transfer.setHumanFrom(null);
+            transfer.setToUser(rowSet.getString("username"));
+            transfer.setFromUser(null);
         }
         else if(transfer.getTransferType().equals("Request")){
-            transfer.setHumanFrom(rowSet.getString("username"));
-            transfer.setHumanTo(null);
+            transfer.setFromUser(rowSet.getString("username"));
+            transfer.setToUser(null);
         }
 
         transfer.setTransferStatus(rowSet.getString("transfer_status_desc"));

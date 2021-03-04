@@ -137,8 +137,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
-		//Required
+		console.transferMenu(bankService.getAccountById(currentUser.getUser().getId()),currentUser.getUser().getUsername());
 	}
 
 	private void requestBucks() {
