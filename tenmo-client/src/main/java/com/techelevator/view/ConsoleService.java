@@ -51,13 +51,22 @@ public class ConsoleService {
 	}
 
 	private void displayMenuOptions(Object[] options) {
-		out.println();
+		out.println("********************************************************************");
+		out.println("*                                                                  *");
+		out.println("                                                                  ");
+		out.println("*                 TEnmo Main Menu                                  *");
+		out.println("                                                                  ");
+		out.println("*                                                                  *");
 		for (int i = 0; i < options.length; i++) {
 			int optionNum = i + 1;
-			out.println(optionNum + ") " + options[i]);
+			out.println("                  "+optionNum + ") " + options[i]+"                                 ");
+			out.println("*                                                                  *");
 		}
-		out.print(System.lineSeparator() + "Please choose an option >>> ");
-		out.flush();
+
+		out.println("                                                                  ");
+		out.println("*                 Please select an option to continue              *");
+		out.println("                                                                  ");
+		out.println("********************************************************************");
 	}
 
 	public String getUserInput(String prompt) {
@@ -82,7 +91,21 @@ public class ConsoleService {
 	}
 
 	public void printBalance(Account account){
-		out.println(account.getBalance());
+
+		System.out.println("********************************************************************");
+		System.out.println("*                                                                  *");
+		System.out.println("*                                                                  *");
+		System.out.println("*                                                                  *");
+		System.out.println("*                View TEnmo Balance                                *");
+		System.out.println("*                                                                  *");
+		System.out.println("*                                                                  *");
+		System.out.println("*                                                                  *");
+		System.out.println("*                Your current account balance is: $" +account.getBalance()+ "           *");
+		System.out.println("*                                                                  *");
+		System.out.println("*                                                                  *");
+		System.out.println("*                                                                  *");
+		System.out.println("********************************************************************");
+		in.nextLine();
 	}
 
 	public void transferMenu(Account fromAccount, String currentUserName){

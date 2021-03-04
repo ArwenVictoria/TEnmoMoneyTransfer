@@ -50,79 +50,29 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void mainMenu() {
 		
-		System.out.println("********************************************************************");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 TEnmo Main Menu                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 (1) View Balance                                 *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 (2) View Past Transfers                          *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 (3) View Pending Requests                        *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 (4) Send Bucks                                   *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 (5) Request Bucks                                *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 (6) Login                                        *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 (7) Exit                                         *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                 Please select an option to continue              *");
-		System.out.println("*                                                                  *");
-		System.out.println("********************************************************************");
-		
 		while(true) {
 		
 			String choice = (String)console.getChoiceFromOptions(MAIN_MENU_OPTIONS);
-			if(MAIN_MENU_OPTION_VIEW_BALANCE.equals("1")) {
+			if(MAIN_MENU_OPTION_VIEW_BALANCE.equals(choice)) {
 				viewCurrentBalance();
-			} else if(MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS.equals("2")) {
+			} else if(MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS.equals(choice)) {
 				viewTransferHistory();
-			} else if(MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals("3")) {
+			} else if(MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
 				viewPendingRequests();
-			} else if(MAIN_MENU_OPTION_SEND_BUCKS.equals("4")) {
+			} else if(MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
 				sendBucks();
-			} else if(MAIN_MENU_OPTION_REQUEST_BUCKS.equals("5")) {
+			} else if(MAIN_MENU_OPTION_REQUEST_BUCKS.equals(choice)) {
 				requestBucks();
-			} else if(MAIN_MENU_OPTION_LOGIN.equals("6")) {
+			} else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
 				login();
-			} else if(MENU_OPTION_EXIT.equals("7")) {
+			} else if(MENU_OPTION_EXIT.equals(choice)) {
 				System.exit(0); 
 			}
 		}
 	}
 
 	private void viewCurrentBalance() {
-		
-		System.out.println("********************************************************************");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                View TEnmo Balance                                *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                Your current account balance is: $ " +bankService.getAccountById(currentUser.getUser().getId())+ "           *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                Please select 0 to return to Main Menu            *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("*                                                                  *");
-		System.out.println("********************************************************************");
-		
 		console.printBalance(bankService.getAccountById(currentUser.getUser().getId()));
-		
-		if (MENU_OPTION_EXIT.equals("0")) {
-			System.exit(0); 
-			mainMenu(); //returns them to purchase menu
-			} 
-			mainMenu(); //returns the to purchase menu whether they hit 0 or not
-			
 	} 
 	
 
