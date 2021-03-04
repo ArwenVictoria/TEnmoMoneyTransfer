@@ -8,9 +8,7 @@ public class Transfer {
 
     String transferStatus;
 
-    String accountFrom;
-
-    String accountTo;
+    String otherUser;
 
     double amount;
 
@@ -38,20 +36,12 @@ public class Transfer {
         this.transferStatus = transferStatus;
     }
 
-    public String getAccountFrom() {
-        return accountFrom;
+    public String getOtherUser() {
+        return otherUser;
     }
 
-    public void setAccountFrom(String accountFrom) {
-        this.accountFrom = accountFrom;
-    }
-
-    public String getAccountTo() {
-        return accountTo;
-    }
-
-    public void setAccountTo(String accountTo) {
-        this.accountTo = accountTo;
+    public void setOtherUser(String otherUser) {
+        this.otherUser = otherUser;
     }
 
     public double getAmount() {

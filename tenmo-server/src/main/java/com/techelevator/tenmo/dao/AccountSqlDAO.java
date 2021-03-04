@@ -7,11 +7,18 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.dbcp2.BasicDataSource;
+
 public class AccountSqlDAO implements AccountDAO{
     private JdbcTemplate jdbcTemplate;
 
-    public void AccountSqlDAO(){
-        this.jdbcTemplate = new JdbcTemplate();
+    public AccountSqlDAO(){
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/tenmo");
+        dataSource.setUsername("postgres");
+        dataSource.setPassword("postgres1");
+
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
@@ -20,7 +27,7 @@ public class AccountSqlDAO implements AccountDAO{
         String sqlGetAllAccounts = "SELECT user_id, balance, account_id FROM accounts WHERE user_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetAllAccounts, user_id);
 
-        while(result.next()){
+        if(result.next()){
             return mapAccountToRow(result);
         }
 
