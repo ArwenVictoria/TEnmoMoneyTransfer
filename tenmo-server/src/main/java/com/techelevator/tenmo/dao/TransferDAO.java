@@ -10,4 +10,6 @@ public interface TransferDAO {
 
     Transfer getTransferById(long id);
 
+    void createTransfer(Transfer transfer);
+
 }

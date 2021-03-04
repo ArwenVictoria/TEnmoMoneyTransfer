@@ -77,6 +77,6 @@ public class ConsoleService {
 	}
 
 	public void printBalance(Account account){
-		System.out.println(account.getBalance());
+		out.println(account.getBalance());
 	}
 }

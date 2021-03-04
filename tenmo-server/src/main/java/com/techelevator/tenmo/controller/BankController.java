@@ -1,15 +1,12 @@
 package com.techelevator.tenmo.controller;
 
-import com.techelevator.tenmo.dao.AccountDAO;
-import com.techelevator.tenmo.dao.AccountSqlDAO;
-import com.techelevator.tenmo.dao.TransferDAO;
-import com.techelevator.tenmo.dao.TransferSqlDAO;
+import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import com.techelevator.tenmo.model.User;
+import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,10 +14,17 @@ import java.util.List;
 public class BankController {
     private AccountDAO accountDAO;
     private TransferDAO transferDAO;
+    private UserDAO userDAO;
 
     public BankController(){
+        BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setUrl("jdbc:postgresql://localhost:5432/tenmo");
+        dataSource.setUsername("postgres");
+        dataSource.setPassword("postgres1");
+
         this.accountDAO = new AccountSqlDAO();
         this.transferDAO = new TransferSqlDAO();
+        this.userDAO = new UserSqlDAO(new JdbcTemplate(dataSource));
     }
 
     @RequestMapping(path = "/{user_id}/accounts", method = RequestMethod.GET)
@@ -38,5 +42,19 @@ public class BankController {
         return transferDAO.getTransferById(transfer_id);
     }
 
+    @RequestMapping(path = "/users", method = RequestMethod.GET)
+    public List<User> getAllUsers(){
+        return userDAO.findAll();
+    }
+
+    @RequestMapping(path = "/accounts", method = RequestMethod.PUT)
+    public void updateBalance(@RequestBody Account account){
+        accountDAO.updateAccountBalance(account);
+    }
+
+    @RequestMapping(path = "/transfers", method = RequestMethod.POST)
+    public void createTransfer(@RequestBody Transfer transfer){
+        transferDAO.createTransfer(transfer);
+    }
 
 }
