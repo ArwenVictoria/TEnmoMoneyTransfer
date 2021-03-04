@@ -53,8 +53,9 @@ public class BankController {
     }
 
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
-    public void createTransfer(@RequestBody Transfer transfer){
+    public Transfer createTransfer(@RequestBody Transfer transfer){
         transferDAO.createTransfer(transfer);
+        return transfer;
     }
 
 }

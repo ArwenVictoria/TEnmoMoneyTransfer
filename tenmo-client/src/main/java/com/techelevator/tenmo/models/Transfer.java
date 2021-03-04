@@ -8,9 +8,22 @@ public class Transfer {
 
     String transferStatus;
 
-    String otherUser;
+    String toUser;
+
+    String fromUser;
 
     double amount;
+
+    public Transfer(){
+    }
+
+    public Transfer(String transferType, String transferStatus, String toUser, String fromUser, double amount) {
+        this.transferType = transferType;
+        this.transferStatus = transferStatus;
+        this.toUser = toUser;
+        this.fromUser = fromUser;
+        this.amount = amount;
+    }
 
     public long getTransferID() {
         return transferID;
@@ -36,12 +49,12 @@ public class Transfer {
         this.transferStatus = transferStatus;
     }
 
-    public String getOtherUser() {
-        return otherUser;
+    public String getToUser() {
+        return toUser;
     }
 
-    public void setOtherUser(String otherUser) {
-        this.otherUser = otherUser;
+    public void setToUser(String toUser) {
+        this.toUser = toUser;
     }
 
     public double getAmount() {
@@ -50,5 +63,13 @@ public class Transfer {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getFromUser() {
+        return fromUser;
+    }
+
+    public void setFromUser(String fromUser) {
+        this.fromUser = fromUser;
     }
 }
