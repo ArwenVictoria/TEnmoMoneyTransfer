@@ -72,7 +72,11 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
+<<<<<<< HEAD
 		console.printBalance(bankService.getAccountById(currentUser.getUser().getId()));
+=======
+		console.printBalance(bankService.getAccountById(currentUser.getUser().getId(), currentUser.getToken())); //
+>>>>>>> a81e47244490024f67184841210b2a0563eedc8b
 	} 
 	
 
@@ -89,7 +93,11 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
+<<<<<<< HEAD
 		console.transferMenu(bankService.getAccountById(currentUser.getUser().getId()),currentUser.getUser().getUsername());
+=======
+		console.transferMenu(bankService.getAccountById(currentUser.getUser().getId(), currentUser.getToken()), currentUser); //
+>>>>>>> a81e47244490024f67184841210b2a0563eedc8b
 	}
 
 	private void requestBucks() {
