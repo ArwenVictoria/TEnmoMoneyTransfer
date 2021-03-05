@@ -83,8 +83,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
+		console.pendingRequestMenu(currentUser);
 	}
 
 	private void sendBucks() {
@@ -92,8 +91,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
+		console.requestMenu(currentUser);
 	}
 	
 	private void exitProgram() {

@@ -52,6 +52,13 @@ public class UserSqlDAO implements UserDAO {
     }
 
     @Override
+    public String findUserNameById(long id) {
+        SqlRowSet result = jdbcTemplate.queryForRowSet("select username from users where user_id = ?", id);
+        result.next();
+        return result.getString("username");
+    }
+
+    @Override
     public boolean create(String username, String password) {
         boolean userCreated = false;
         boolean accountCreated = false;

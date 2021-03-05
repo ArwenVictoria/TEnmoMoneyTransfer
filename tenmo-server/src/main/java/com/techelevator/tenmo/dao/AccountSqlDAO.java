@@ -53,6 +53,15 @@ public class AccountSqlDAO implements AccountDAO{
         jdbcTemplate.update(sqlUpdateBalance, account.getBalance(), account.getAccount_id());
     }
 
+    @Override
+    public long getUserId(long accountId) {
+        String sqlGetUser = "SELECT user_id FROM accounts WHERE account_id = ?";
+
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlGetUser, accountId);
+        rowSet.next();
+        return rowSet.getLong("user_id");
+    }
+
     private Account mapAccountToRow(SqlRowSet row){
         Account a = new Account();
         a.setUser_id(row.getLong("user_id"));
