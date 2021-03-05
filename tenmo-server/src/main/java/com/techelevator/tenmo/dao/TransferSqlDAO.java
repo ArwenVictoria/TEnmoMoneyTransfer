@@ -22,9 +22,15 @@ public class TransferSqlDAO implements TransferDAO{
 
     public List<Transfer> getAllTransfers(long id){
         List<Transfer> output = new ArrayList<>();
-        String sqlGetAllTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
-                "USING(transfer_status_id) JOIN accounts ON (account_to = account_id) JOIN users USING(user_id) WHERE account_from = ? OR account_to = ?";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetAllTransfers, id, id);
+        String sqlGetAllFromTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
+                "USING(transfer_status_id) JOIN accounts ON (account_to = account_id) JOIN users USING(user_id) WHERE account_from = ?";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetAllFromTransfers, id);
+        while (result.next()){
+            output.add(mapRowToTransfer(result));
+        }
+        String sqlGetAllToTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
+                "USING(transfer_status_id) JOIN accounts ON (account_from = account_id) JOIN users USING(user_id) WHERE account_to = ?";
+        result = jdbcTemplate.queryForRowSet(sqlGetAllToTransfers, id);
         while (result.next()){
             output.add(mapRowToTransfer(result));
         }

@@ -74,24 +74,24 @@ public class Transfer {
     }
 
     public String printTransfer(){
-        String output = "\n";
+        String output = "";
 
         output+= transferID + " ";
 
         if("Send".equals(transferType)){
-            output += "To: " + toUser;
+            output += "         To: " + toUser;
         }
         else{
-            output += "From: " + fromUser;
+            output += "         From: " + fromUser;
         }
 
-        output += " $ " + amount;
+        output += "                 $ " + amount;
 
         return output;
     }
 
     public String printTransferDetails(String currentUserName){
-        String output = "\n";
+        String output = "Transfer Details";
 
         output += "\nTransfer Id: " + transferID;
         if("Send".equals(transferType) ){
