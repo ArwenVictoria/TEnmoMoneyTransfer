@@ -100,7 +100,7 @@ public class ConsoleService {
 		System.out.println("*                                                                  *");
 		System.out.println("*                                                                  *");
 		System.out.println("*                                                                  *");
-		System.out.println("*                Your current account balance is: $" +account.getBalance()+ "           *");
+		System.out.println("*                Your current account balance is: $" +account.getBalance()+ "         *");
 		System.out.println("*                                                                  *");
 		System.out.println("*                                                                  *");
 		System.out.println("*                                                                  *");
@@ -189,10 +189,103 @@ public class ConsoleService {
 					System.out.println("That's not a number! Please try again.");
 				}
 			}
-
-
 		}
 
+		}
+		public void transferHistory(Transfer[] transfers){
+			while(true) {
+			for (Transfer t : transfers) {
+				System.out.println(t.getTransferID());
+			}
+			out.println("Please select a valid option.");
+			String input = in.nextLine();
+			if ("0".equals(input)) {
+				return;
+			} 	
+			boolean printedDetails = false;	
+			
+			 
+			try { //
+				int choice = Integer.parseInt(input);
+				for (Transfer t: transfers) {
+					if (choice == t.getTransferID()) {
+					System.out.println(t.getTransferID()); //details
+					printedDetails = true;
+			 }
+		}
+			if (!printedDetails) {
+				
+			} 
+			}
+			catch(NumberFormatException e) {
+				System.out.println("Please enter a number only.");
+			}
+			
+			out.println("-------------------------------------------\n" +
+					"Transfers\n" +
+					"ID          From/To\n               Amount\n" +             
+					"-------------------------------------------");
+
+		/*	for(User u: allowedUsers){
+					out.println(u.getId() + "          " + u.getUsername());
+			}
+
+			while(!transferExists) {
+
+				System.out.println("Please enter transferID to view details (0 to cancel):");
+				input = in.nextLine();
+
+				if (input.equals("0")) {
+					return;
+				} else {
+					try {
+						userId = Long.parseLong(input);
+
+
+						for(User u: allowedUsers){
+							if(u.getId()==userId){
+								userExists = true;
+								userName = u.getUsername();
+							}
+						}
+
+						if(!userExists){
+							out.println("That user doesn't exist. Please try again.");
+						}
+					} catch (NumberFormatException e) {
+						System.out.println("That's not a number! Please try again.");
+					}
+				}
+			}
+
+			while (amount <= -1){
+				out.println("Enter amount (0 to cancel):");
+				input = in.nextLine();
+				if(input.equals("0")){
+					return;
+				}
+				else {
+					try {
+						amount = Double.parseDouble(input);
+
+
+						if(amount < 0){
+							out.println("You can't transfer negative numbers!");
+						}
+
+						if(amount > fromAccount.getBalance()){
+							out.println("You do not have enough money to make this transfer.");
+							amount = -1;
+						}
+
+					} catch (NumberFormatException e) {
+						System.out.println("That's not a number! Please try again.");
+					*/
+				}
+	
+
+			} 
+	
 		toAccount = bankService.getAccountById(userId);
 		fromAccount.setBalance(fromAccount.getBalance()-amount);
 		toAccount.setBalance(toAccount.getBalance()+amount);
