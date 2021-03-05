@@ -72,14 +72,16 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
-		console.printBalance(bankService.getAccountById(currentUser.getUser().getId(), currentUser.getToken()));
+		console.printBalance(bankService.getAccountById(currentUser.getUser().getId()));
 	} 
 	
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+		console.
+		//console.pastTransfers(bankService.listTransfers(currentUser.getUser().getId());//...
 		// Required  first send list of all transfers then they pick which one
-	}
+	} 
+	
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
@@ -87,7 +89,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-		console.transferMenu(bankService.getAccountById(currentUser.getUser().getId(), currentUser.getToken()), currentUser);
+		console.transferMenu(bankService.getAccountById(currentUser.getUser().getId()),currentUser.getUser().getUsername());
 	}
 
 	private void requestBucks() {
