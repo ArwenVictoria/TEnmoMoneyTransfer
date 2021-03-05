@@ -1,17 +1,30 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
+
 public class Transfer {
 
     long transferID;
 
+    @NotEmpty
+    @NotBlank
     String transferType;
 
+    @NotEmpty
+    @NotBlank
     String transferStatus;
 
+    @NotEmpty
+    @NotBlank
     String fromUser;
 
+    @NotEmpty
+    @NotBlank
     String ToUser;
 
+    @Positive
     double amount;
 
     public long getTransferID() {

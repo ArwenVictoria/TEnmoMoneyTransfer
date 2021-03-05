@@ -10,6 +10,8 @@ import java.util.List;
 
 public class TransferSqlDAO implements TransferDAO{
     private JdbcTemplate jdbcTemplate;
+    private UserDAO userDAO;
+    private AccountDAO accountDAO;
 
     public TransferSqlDAO(){
         BasicDataSource dataSource = new BasicDataSource();
@@ -18,19 +20,15 @@ public class TransferSqlDAO implements TransferDAO{
         dataSource.setPassword("postgres1");
 
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.userDAO = new UserSqlDAO(jdbcTemplate);
+        this.accountDAO = new AccountSqlDAO();
     }
 
     public List<Transfer> getAllTransfers(long id){
         List<Transfer> output = new ArrayList<>();
         String sqlGetAllFromTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
-                "USING(transfer_status_id) JOIN accounts ON (account_to = account_id) JOIN users USING(user_id) WHERE account_from = ?";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetAllFromTransfers, id);
-        while (result.next()){
-            output.add(mapRowToTransfer(result));
-        }
-        String sqlGetAllToTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
-                "USING(transfer_status_id) JOIN accounts ON (account_from = account_id) JOIN users USING(user_id) WHERE account_to = ?";
-        result = jdbcTemplate.queryForRowSet(sqlGetAllToTransfers, id);
+                "USING(transfer_status_id) WHERE account_from = ? OR account_to = ?";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetAllFromTransfers, id, id);
         while (result.next()){
             output.add(mapRowToTransfer(result));
         }
@@ -40,7 +38,7 @@ public class TransferSqlDAO implements TransferDAO{
     public Transfer getTransferById(long id){
 
         String sqlGetAllTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
-                "USING(transfer_status_id) JOIN accounts ON (account_to = account_id) JOIN users USING(user_id) WHERE transfer_id = ?";
+                "USING(transfer_status_id) WHERE transfer_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetAllTransfers, id);
 
         if (result.next()){
@@ -60,22 +58,37 @@ public class TransferSqlDAO implements TransferDAO{
                 transfer.getToUser(), transfer.getAmount());
     }
 
+    public Transfer updateTransferStatus(Transfer transfer){
+        String sqlUpdateStatus = "UPDATE transfers SET transfer_status_id = (SELECT transfer_status_id FROM transfer_statuses WHERE transfer_status_desc = ?) WHERE transfer_id = ?";
+
+        jdbcTemplate.update(sqlUpdateStatus, transfer.getTransferStatus(), transfer.getTransferID());
+
+        return getTransferById(transfer.getTransferID());
+    }
+
+    public List<Transfer> getPendingTransfers(long id){
+        List<Transfer> transfers = new ArrayList<>();
+        String sqlGetPendingTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
+                "USING(transfer_status_id) WHERE account_from = ? AND transfer_status_id = (SELECT transfer_status_id FROM transfer_statuses WHERE transfer_status_desc = 'Pending')";
+
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlGetPendingTransfers, id);
+
+        while(rowSet.next()){
+            transfers.add(mapRowToTransfer(rowSet));
+        }
+
+        return transfers;
+    }
+
     private Transfer mapRowToTransfer(SqlRowSet rowSet){
         Transfer transfer = new Transfer();
         transfer.setTransferID(rowSet.getLong("transfer_id"));
         transfer.setTransferType(rowSet.getString("transfer_type_desc"));
-
-        if(transfer.getTransferType().equals("Send")) {
-            transfer.setToUser(rowSet.getString("username"));
-            transfer.setFromUser(null);
-        }
-        else if(transfer.getTransferType().equals("Request")){
-            transfer.setFromUser(rowSet.getString("username"));
-            transfer.setToUser(null);
-        }
-
+        transfer.setFromUser(userDAO.findUserNameById(accountDAO.getUserId(rowSet.getLong("account_from"))));
+        transfer.setToUser(userDAO.findUserNameById(accountDAO.getUserId(rowSet.getLong("account_to"))));
         transfer.setTransferStatus(rowSet.getString("transfer_status_desc"));
         transfer.setAmount(rowSet.getDouble("amount"));
         return transfer;
     }
+
 }

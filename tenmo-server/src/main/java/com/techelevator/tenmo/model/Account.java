@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.Positive;
+
 public class Account {
 
 	private long account_id;

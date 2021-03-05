@@ -10,6 +10,10 @@ public interface TransferDAO {
 
     Transfer getTransferById(long id);
 
+    Transfer updateTransferStatus(Transfer transfer);
+
     void createTransfer(Transfer transfer);
+
+    List<Transfer> getPendingTransfers(long id);
 
 }
