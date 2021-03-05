@@ -5,11 +5,14 @@ import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 public class BankController {
     private AccountDAO accountDAO;
@@ -52,6 +55,7 @@ public class BankController {
         accountDAO.updateAccountBalance(account);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
     public Transfer createTransfer(@RequestBody Transfer transfer){
         transferDAO.createTransfer(transfer);
