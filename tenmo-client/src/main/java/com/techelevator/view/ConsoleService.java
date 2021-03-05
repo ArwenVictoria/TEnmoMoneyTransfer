@@ -207,10 +207,16 @@ public class ConsoleService {
 		bankService.createTransfer(transfer, token);
 
 	}
-		public void transferHistory(Transfer[] transfers){
+		public void transferHistory(Transfer[] transfers, String userName){
+
+			out.println("-------------------------------------------\n" +
+					"Transfers\n" +
+					"ID          From/To                 Amount\n" +
+					"-------------------------------------------");
+
 			while(true) {
 			for (Transfer t : transfers) {
-				System.out.println(t.getTransferID());
+				System.out.println(t.printTransfer());
 			}
 			out.println("Please select a valid option.");
 			String input = in.nextLine();
@@ -224,7 +230,7 @@ public class ConsoleService {
 				int choice = Integer.parseInt(input);
 				for (Transfer t: transfers) {
 					if (choice == t.getTransferID()) {
-					System.out.println(t.getTransferID()); //details
+					System.out.println(t.printTransferDetails(userName)); //details
 					printedDetails = true;
 			 }
 		}
@@ -235,14 +241,10 @@ public class ConsoleService {
 			catch(NumberFormatException e) {
 				System.out.println("Please enter a number only.");
 			}
-			
-			out.println("-------------------------------------------\n" +
-					"Transfers\n" +
-					"ID          From/To\n               Amount\n" +             
-					"-------------------------------------------");
+
 
 				}
-	
+
 
 			}
 

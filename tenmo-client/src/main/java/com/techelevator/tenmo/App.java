@@ -1,6 +1,7 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
+import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
@@ -77,8 +78,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		// Required  first send list of all transfers then they pick which one
+    	Transfer[] transfers = bankService.listTransfers(currentUser.getUser().getId(), currentUser.getToken());
+		console.transferHistory(transfers, currentUser.getUser().getUsername());
 	}
 
 	private void viewPendingRequests() {

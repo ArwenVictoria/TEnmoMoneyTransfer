@@ -72,4 +72,41 @@ public class Transfer {
     public void setFromUser(String fromUser) {
         this.fromUser = fromUser;
     }
+
+    public String printTransfer(){
+        String output = "\n";
+
+        output+= transferID + " ";
+
+        if("Send".equals(transferType)){
+            output += "To: " + toUser;
+        }
+        else{
+            output += "From: " + fromUser;
+        }
+
+        output += " $ " + amount;
+
+        return output;
+    }
+
+    public String printTransferDetails(String currentUserName){
+        String output = "\n";
+
+        output += "\nTransfer Id: " + transferID;
+        if("Send".equals(transferType) ){
+            output += "\nFrom: " + currentUserName;
+            output += "\nTo: " + toUser;
+        }
+        else{
+            output += "\nFrom: " + toUser;
+            output += "\nTo: " + currentUserName;
+        }
+
+        output += "\nType: " + transferType;
+        output += "\nStatus: " + transferStatus;
+        output += "\nAmount: " + amount;
+
+        return output;
+    }
 }
