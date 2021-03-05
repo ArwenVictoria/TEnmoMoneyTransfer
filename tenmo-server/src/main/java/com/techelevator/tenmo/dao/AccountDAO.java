@@ -9,7 +9,10 @@ public interface AccountDAO {
 
 	Account findById(long user_id);
 	
-	 List<Account> findAll();
+	List<Account> findAll();
 
 	void updateAccountBalance(Account account);
+
+	long getUserId(long accountId);
+
 }

@@ -73,16 +73,16 @@ public class Transfer {
         this.fromUser = fromUser;
     }
 
-    public String printTransfer(){
+    public String printTransfer(String currentUserName){
         String output = "";
 
         output+= transferID + " ";
 
-        if("Send".equals(transferType)){
-            output += "         To: " + toUser;
+        if(currentUserName.equals(toUser)){
+            output += "         From: " + fromUser;
         }
         else{
-            output += "         From: " + fromUser;
+            output += "         To: " + toUser;
         }
 
         output += "                 $ " + amount;
@@ -90,22 +90,16 @@ public class Transfer {
         return output;
     }
 
-    public String printTransferDetails(String currentUserName){
-        String output = "Transfer Details";
+    public String printTransferDetails(){
+        String output = "Transfer Details\n" +
+                "-------------------------------------------";
 
         output += "\nTransfer Id: " + transferID;
-        if("Send".equals(transferType) ){
-            output += "\nFrom: " + currentUserName;
-            output += "\nTo: " + toUser;
-        }
-        else{
-            output += "\nFrom: " + toUser;
-            output += "\nTo: " + currentUserName;
-        }
-
+        output += "\nFrom: " + fromUser;
+        output += "\nTo: " + toUser;
         output += "\nType: " + transferType;
         output += "\nStatus: " + transferStatus;
-        output += "\nAmount: " + amount;
+        output += "\nAmount: " + amount + "\n";
 
         return output;
     }

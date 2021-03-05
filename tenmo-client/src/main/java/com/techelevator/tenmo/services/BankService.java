@@ -39,6 +39,23 @@ public class BankService {
         }
         return null;
     }
+
+    public User getUserByUserName(String name, String token){
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity request = new HttpEntity<>(headers);
+
+            return restTemplate.exchange(BASE_URL + "users/"+name, HttpMethod.GET, request, User.class).getBody();
+        }
+        catch(RestClientResponseException e){
+            System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
+        }
+        catch (ResourceAccessException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
     
     public Transfer[] listTransfers(long id, String token) {
         Transfer[] transfers = null;
@@ -71,22 +88,41 @@ public class BankService {
         }
         return users;
     }
-    
-    public Transfer getTransfer(int transferId, String token) {
-        Transfer transfer = null;
+
+    public Transfer[] getPendingTransfers(long id, String token){
+        Transfer[] transfers = null;
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(token);
             HttpEntity entity = new HttpEntity<>(headers);
 
-          transfer = restTemplate.exchange(BASE_URL + "/transfers/" + transferId, HttpMethod.GET, entity, Transfer.class).getBody();
+            transfers = restTemplate.exchange(BASE_URL + id +"/transfers/pending", HttpMethod.GET, entity, Transfer[].class).getBody();
         } catch (RestClientResponseException e) {
-        	System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
+            System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
         } catch (ResourceAccessException e) {
-        	System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
-        return transfer;
-      }
+        return transfers;
+    }
+
+    public void updateTransferStatus(Transfer transfer, String token){
+        if (transfer == null) {
+            return;
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
+        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+
+        try {
+            restTemplate.put(BASE_URL + "/transfers" , entity);
+        } catch (RestClientResponseException e) {
+            System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
+        } catch (ResourceAccessException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     
     public Account updateAccount(Account account, String token) {
         if (account == null) {
