@@ -207,43 +207,39 @@ public class ConsoleService {
 		bankService.createTransfer(transfer, token);
 
 	}
-		public void transferHistory(Transfer[] transfers){
+		public void transferHistory(Transfer[] transfers, String userName){
+
 			while(true) {
-			for (Transfer t : transfers) {
-				System.out.println(t.getTransferID());
-			}
-			out.println("Please select a valid option.");
-			String input = in.nextLine();
-			if ("0".equals(input)) {
-				return;
-			} 	
-			boolean printedDetails = false;	
-			
-			 
-			try { //
-				int choice = Integer.parseInt(input);
-				for (Transfer t: transfers) {
-					if (choice == t.getTransferID()) {
-					System.out.println(t.getTransferID()); //details
-					printedDetails = true;
-			 }
-		}
-			if (!printedDetails) {
-				
-			} 
-			}
-			catch(NumberFormatException e) {
-				System.out.println("Please enter a number only.");
-			}
-			
-			out.println("-------------------------------------------\n" +
-					"Transfers\n" +
-					"ID          From/To\n               Amount\n" +             
-					"-------------------------------------------");
-
+				out.println("-------------------------------------------\n" +
+						"Transfers\n" +
+						"ID          From/To                 Amount\n" +
+						"-------------------------------------------");
+				for (Transfer t : transfers) {
+					out.println(t.printTransfer());
 				}
-	
+				out.println("\nPlease enter a transfer id to view details. Press 0 to exit.");
+				String input = in.nextLine();
+				if ("0".equals(input)) {
+					return;
+				}
+				boolean printedDetails = false;
 
+
+				try {
+					int choice = Integer.parseInt(input);
+					for (Transfer t : transfers) {
+						if (choice == t.getTransferID()) {
+							out.println(t.printTransferDetails(userName+"\n")); //details
+							printedDetails = true;
+							in.nextLine();
+						}
+					}
+					if (!printedDetails) {
+						out.println("That transfer doesn't exist! Please try again.\n");
+					}
+				} catch (NumberFormatException e) {
+					System.out.println("Please enter a number only.");
+				}
 			}
-
 	}
+}
