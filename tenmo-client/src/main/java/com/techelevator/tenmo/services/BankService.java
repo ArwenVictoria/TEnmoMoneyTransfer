@@ -6,6 +6,7 @@ import com.techelevator.tenmo.models.Account;
 import com.techelevator.tenmo.models.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
@@ -14,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 public class BankService {
 	 private final String BASE_URL;
-	  private RestTemplate restTemplate = new RestTemplate();
+	 private RestTemplate restTemplate = new RestTemplate();
 	
 
     public BankService(String url){
@@ -22,9 +23,13 @@ public class BankService {
         restTemplate = new RestTemplate();
     }
 
-    public Account getAccountById(long id){
+    public Account getAccountById(long id, String token){
         try {
-            return restTemplate.getForObject(BASE_URL + id +"/accounts/", Account.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity request = new HttpEntity<>(headers);
+
+            return restTemplate.exchange(BASE_URL + id +"/accounts/", HttpMethod.GET, request, Account.class).getBody();
         }
         catch(RestClientResponseException e){
             System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
@@ -35,10 +40,14 @@ public class BankService {
         return null;
     }
     
-    public Transfer[] listTransfers(long id) {
+    public Transfer[] listTransfers(long id, String token) {
         Transfer[] transfers = null;
         try {
-          transfers = restTemplate.getForObject(BASE_URL + id +"/transfers/", Transfer[].class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity entity = new HttpEntity<>(headers);
+
+          transfers = restTemplate.exchange(BASE_URL + id +"/transfers/", HttpMethod.GET, entity, Transfer[].class).getBody();
         } catch (RestClientResponseException e) {
         	System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
         } catch (ResourceAccessException e) {
@@ -47,10 +56,14 @@ public class BankService {
         return transfers;
       }
 
-    public User[] listUsers() {
+    public User[] listUsers(String token) {
         User[] users = null;
         try {
-            users = restTemplate.getForObject(BASE_URL + "/users", User[].class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(token);
+            HttpEntity entity = new HttpEntity<>(headers);
+
+            users = restTemplate.exchange(BASE_URL + "/users", HttpMethod.GET, entity, User[].class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
         } catch (ResourceAccessException e) {
@@ -59,10 +72,14 @@ public class BankService {
         return users;
     }
     
-    public Transfer getTransfer(int transferId) {
+    public Transfer getTransfer(int transferId, String token) {
         Transfer transfer = null;
         try {
-          transfer = restTemplate.getForObject(BASE_URL + "/transfers/" + transferId, Transfer.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity entity = new HttpEntity<>(headers);
+
+          transfer = restTemplate.exchange(BASE_URL + "/transfers/" + transferId, HttpMethod.GET, entity, Transfer.class).getBody();
         } catch (RestClientResponseException e) {
         	System.out.println(e.getRawStatusCode() + " : " + e.getStatusText());
         } catch (ResourceAccessException e) {
@@ -71,13 +88,14 @@ public class BankService {
         return transfer;
       }
     
-    public Account updateAccount(Account account) {
+    public Account updateAccount(Account account, String token) {
         if (account == null) {
           return null;
         }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(token);
         HttpEntity<Account> entity = new HttpEntity<>(account, headers);
 
         try {
@@ -90,13 +108,14 @@ public class BankService {
         return account;
       }
 
-      public Transfer createTransfer(Transfer transfer){
+      public Transfer createTransfer(Transfer transfer, String token){
           if (transfer == null) {
               return null;
           }
 
           HttpHeaders headers = new HttpHeaders();
           headers.setContentType(MediaType.APPLICATION_JSON);
+          headers.setBearerAuth(token);
           HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
 
           try {

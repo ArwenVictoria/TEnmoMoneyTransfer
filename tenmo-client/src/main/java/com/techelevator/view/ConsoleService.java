@@ -2,6 +2,7 @@ package com.techelevator.view;
 
 
 import com.techelevator.tenmo.models.Account;
+import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.services.BankService;
@@ -100,7 +101,7 @@ public class ConsoleService {
 		System.out.println("*                                                                  *");
 		System.out.println("*                                                                  *");
 		System.out.println("*                                                                  *");
-		System.out.println("*                Your current account balance is: $" +account.getBalance()+ "         *");
+		System.out.println("*                Your current account balance is: $" +account.getBalance()+ "           *");
 		System.out.println("*                                                                  *");
 		System.out.println("*                                                                  *");
 		System.out.println("*                                                                  *");
@@ -108,8 +109,10 @@ public class ConsoleService {
 		in.nextLine();
 	}
 
-	public void transferMenu(Account fromAccount, String currentUserName){
-		User[] users = bankService.listUsers();
+	public void transferMenu(Account fromAccount, AuthenticatedUser user){
+		String currentUserName = user.getUser().getUsername();
+		String token = user.getToken();
+		User[] users = bankService.listUsers(token);
 		User[] allowedUsers = new User[users.length-1];
 
 		int i = 0;
@@ -134,7 +137,7 @@ public class ConsoleService {
 				"-------------------------------------------");
 
 		for(User u: allowedUsers){
-				out.println(u.getId() + "          " + u.getUsername());
+			out.println(u.getId() + "          " + u.getUsername());
 		}
 
 		while(!userExists) {
@@ -189,9 +192,21 @@ public class ConsoleService {
 					System.out.println("That's not a number! Please try again.");
 				}
 			}
-		}
+
 
 		}
+
+		toAccount = bankService.getAccountById(userId, token);
+		fromAccount.setBalance(fromAccount.getBalance()-amount);
+		toAccount.setBalance(toAccount.getBalance()+amount);
+
+		bankService.updateAccount(fromAccount, token);
+		bankService.updateAccount(toAccount, token);
+
+		Transfer transfer = new Transfer("Send", "Approved", userName, currentUserName, amount);
+		bankService.createTransfer(transfer, token);
+
+	}
 		public void transferHistory(Transfer[] transfers){
 			while(true) {
 			for (Transfer t : transfers) {
@@ -226,75 +241,9 @@ public class ConsoleService {
 					"ID          From/To\n               Amount\n" +             
 					"-------------------------------------------");
 
-		/*	for(User u: allowedUsers){
-					out.println(u.getId() + "          " + u.getUsername());
-			}
-
-			while(!transferExists) {
-
-				System.out.println("Please enter transferID to view details (0 to cancel):");
-				input = in.nextLine();
-
-				if (input.equals("0")) {
-					return;
-				} else {
-					try {
-						userId = Long.parseLong(input);
-
-
-						for(User u: allowedUsers){
-							if(u.getId()==userId){
-								userExists = true;
-								userName = u.getUsername();
-							}
-						}
-
-						if(!userExists){
-							out.println("That user doesn't exist. Please try again.");
-						}
-					} catch (NumberFormatException e) {
-						System.out.println("That's not a number! Please try again.");
-					}
-				}
-			}
-
-			while (amount <= -1){
-				out.println("Enter amount (0 to cancel):");
-				input = in.nextLine();
-				if(input.equals("0")){
-					return;
-				}
-				else {
-					try {
-						amount = Double.parseDouble(input);
-
-
-						if(amount < 0){
-							out.println("You can't transfer negative numbers!");
-						}
-
-						if(amount > fromAccount.getBalance()){
-							out.println("You do not have enough money to make this transfer.");
-							amount = -1;
-						}
-
-					} catch (NumberFormatException e) {
-						System.out.println("That's not a number! Please try again.");
-					*/
 				}
 	
 
-			} 
-	
-		toAccount = bankService.getAccountById(userId);
-		fromAccount.setBalance(fromAccount.getBalance()-amount);
-		toAccount.setBalance(toAccount.getBalance()+amount);
-
-		bankService.updateAccount(fromAccount);
-		bankService.updateAccount(toAccount);
-
-		Transfer transfer = new Transfer("Send", "Approved", userName, currentUserName, amount);
-		bankService.createTransfer(transfer);
+			}
 
 	}
-}
