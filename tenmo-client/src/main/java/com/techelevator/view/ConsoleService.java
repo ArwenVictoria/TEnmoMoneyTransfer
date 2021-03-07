@@ -9,13 +9,11 @@ import com.techelevator.tenmo.services.BankService;
 import com.techelevator.tenmo.services.EmailService;
 import com.techelevator.tenmo.services.NotEnoughDoughException;
 import com.techelevator.tenmo.services.TransferDoesNotExistException;
-import io.cucumber.java.an.E;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -97,7 +95,9 @@ public class ConsoleService {
 		return result;
 	}
 
-	public void printBalance(Account account){
+	public void printBalance(AuthenticatedUser currentUser){
+
+		Account account = bankService.getAccountByUserId(currentUser.getUser().getId(), currentUser.getToken());
 
 		System.out.println("********************************************************************");
 		System.out.println("                                                                    ");
@@ -113,7 +113,9 @@ public class ConsoleService {
 		in.nextLine();
 	}
 
-	public void transferMenu(Account fromAccount, AuthenticatedUser user){
+	public void transferMenu(AuthenticatedUser user){
+		Account fromAccount = bankService.getAccountByUserId(user.getUser().getId(), user.getToken());
+
 		while(true) {
 			String currentUserName = user.getUser().getUsername();
 			String token = user.getToken();
@@ -218,28 +220,74 @@ public class ConsoleService {
 		}
 
 	}
-		public void transferHistory(Transfer[] transfers, String userName){
+		public void transferHistory(AuthenticatedUser currentUser){
+			Transfer[] transfers = bankService.listTransfers(currentUser.getUser().getId(), currentUser.getToken());
+			String userName = currentUser.getUser().getUsername();
 
 			while(true) {
 				if(transfers.length==0){
-					out.println("Nothing to see here!");
+					out.println("Nothing to see here! Press any key to return to main menu.");
 					in.nextLine();
 					return;
 				}
-				out.println("-------------------------------------------\n" +
-						"Transfers\n" +
-						"ID          From/To                 Amount\n" +
-						"-------------------------------------------");
 
-				for (Transfer t : transfers) {
-					out.println(t.printTransfer(userName));
+				String body = "";
+				body += "\n-----------------------------------------------------\n";
+				body += "                 Approved Transfers\n";
+				body += "-----------------------------------------------------\n";
+				boolean printed = false;
+
+				for (Transfer t:transfers){
+					if(t.getTransferStatus().equals("Approved")) {
+						body += t.printTransfer(userName) + "\n";
+						printed = true;
+					}
 				}
+
+				if(!printed){
+					body += ("Nothing to see here!");
+				}
+
+				body += "\n-----------------------------------------------------\n";
+				body += "                 Pending Transfers\n";
+				body += "-----------------------------------------------------\n";
+				printed = false;
+
+				for (Transfer t:transfers){
+					if(t.getTransferStatus().equals("Pending")) {
+						body += t.printTransfer(userName) + "\n";
+						printed = true;
+					}
+				}
+
+				if(!printed){
+					body += ("Nothing to see here!");
+				}
+
+				body += "\n-----------------------------------------------------\n";
+				body += "                 Rejected Transfers\n";
+				body += "-----------------------------------------------------\n";
+				printed = false;
+
+				for (Transfer t:transfers){
+					if(t.getTransferStatus().equals("Rejected")) {
+						body += t.printTransfer(userName) + "\n";
+						printed = true;
+					}
+				}
+
+				if(!printed){
+					body += ("Nothing to see here!");
+				}
+
+				out.println(body);
+
 				out.println("\nPlease enter a transfer id to view details. Press 0 to exit.");
 				String input = in.nextLine();
 				if ("0".equals(input)) {
 					return;
 				}
-				boolean printedDetails = false;
+				printed = false;
 
 
 				try {
@@ -248,11 +296,11 @@ public class ConsoleService {
 						if (choice == t.getTransferID()) {
 							out.println(t.printTransferDetails());
 							out.println("\nPress any key to return to transfer menu.");
-							printedDetails = true;
+							printed = true;
 							in.nextLine();
 						}
 					}
-					if (!printedDetails) {
+					if (!printed) {
 						out.println("That transfer doesn't exist! Please try again.\n");
 					}
 				} catch (NumberFormatException e) {
@@ -276,7 +324,7 @@ public class ConsoleService {
 				}
 			}
 
-			long userId = -1;
+			long userId;
 			boolean userExists = false;
 			double amount = -1;
 			String userName = "";
@@ -410,7 +458,8 @@ public class ConsoleService {
 					transferInQuestion.setTransferStatus("Approved");
 					bankService.updateTransferStatus(transferInQuestion, user.getToken());
 					out.println("Transfer approved.");
-					out.println("Current balance:" + a.getBalance() + "\nPress enter to return to pending transfers.");
+					out.println("Current balance: $" + a.getBalance() + "\nPress any key to return to pending transfers.");
+					in.nextLine();
 				}
 				else if(input.equals("2")){
 					transferInQuestion.setTransferStatus("Rejected");
@@ -440,10 +489,35 @@ public class ConsoleService {
 
 		String body = "Current Balance: "+a.getBalance();
 		body += "\n-----------------------------------------------------\n";
-		body += "                      Transfers\n";
+		body += "                 Approved Transfers\n";
 		body += "-----------------------------------------------------\n";
+		boolean printed = false;
+
 		for (Transfer t:transfers){
-			body += t.printTransfer(user.getUser().getUsername())+"\n";
+			if(t.getTransferStatus().equals("Approved")) {
+				body += t.printTransfer(user.getUser().getUsername()) + "\n";
+				printed = true;
+			}
+		}
+
+		if(!printed){
+			body += ("Nothing to see here!");
+		}
+
+		body += "\n-----------------------------------------------------\n";
+		body += "                 Pending Transfers\n";
+		body += "-----------------------------------------------------\n";
+		printed = false;
+
+		for (Transfer t:transfers){
+			if(t.getTransferStatus().equals("Pending")) {
+				body += t.printTransfer(user.getUser().getUsername()) + "\n";
+				printed = true;
+			}
+		}
+
+		if(!printed){
+			body += ("Nothing to see here!");
 		}
 
 		EmailService emailService = new EmailService();

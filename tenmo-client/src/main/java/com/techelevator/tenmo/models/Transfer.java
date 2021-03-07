@@ -120,12 +120,13 @@ public class Transfer {
 
         if(currentUserName.equals(userToName)){
             output += "         From: " + userFromName;
+            output += "                 $ " + amount;
         }
         else{
             output += "         To: " + userToName;
+            output += "                -$ " + amount;
         }
 
-        output += "                 $ " + amount;
 
         return output;
     }

@@ -1,11 +1,9 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
-import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.AuthenticationServiceException;
-import com.techelevator.tenmo.services.BankService;
 import com.techelevator.view.ConsoleService;
 
 public class App {
@@ -23,22 +21,20 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
 	private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
 	private static final String MAIN_MENU_OPTION_SEND_STATEMENT = "Get an email of your bank statement";
-	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MAIN_MENU_OPTION_SEND_STATEMENT,MENU_OPTION_EXIT };
+	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_SEND_STATEMENT, MAIN_MENU_OPTION_LOGIN,MENU_OPTION_EXIT };
 	
     private AuthenticatedUser currentUser;
     private ConsoleService console;
     private AuthenticationService authenticationService;
-    private BankService bankService;
 
     public static void main(String[] args) {
-    	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), new BankService(API_BASE_URL));
+    	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
     	app.run();
     }
 
-    public App(ConsoleService console, AuthenticationService authenticationService, BankService bankService) {
+    public App(ConsoleService console, AuthenticationService authenticationService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
-		this.bankService = bankService;
 	}
 
 	public void run() {
@@ -76,13 +72,12 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
-		console.printBalance(bankService.getAccountByUserId(currentUser.getUser().getId(), currentUser.getToken())); //
+		console.printBalance(currentUser); //
 	} 
 	
 
 	private void viewTransferHistory() {
-    	Transfer[] transfers = bankService.listTransfers(currentUser.getUser().getId(), currentUser.getToken());
-		console.transferHistory(transfers, currentUser.getUser().getUsername());
+		console.transferHistory(currentUser);
 	}
 
 	private void viewPendingRequests() {
@@ -90,7 +85,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-		console.transferMenu(bankService.getAccountByUserId(currentUser.getUser().getId(), currentUser.getToken()), currentUser); //
+		console.transferMenu(currentUser); //
 	}
 
 	private void requestBucks() {
