@@ -198,7 +198,7 @@ public class ConsoleService {
 
 		}
 
-		toAccount = bankService.getAccountById(userId, token);
+		toAccount = bankService.getAccountByUserId(userId, token);
 		fromAccount.setBalance(fromAccount.getBalance()-amount);
 		toAccount.setBalance(toAccount.getBalance()+amount);
 
@@ -376,20 +376,20 @@ public class ConsoleService {
 
 				input = in.nextLine();
 				if(input.equals("1")){
-					//Account a = bankService.getAccountById(user.getUser().getId(), user.getToken());
-					//if(transferInQuestion.getAmount() >= a.getBalance()){
-					//	throw new NotEnoughDoughException();
-					//}
-					//Account b = bankService.getAccountById(bankService.getUserByUserName(transferInQuestion.getToUser(), user.getToken()).getId(), user.getToken());
-					//
-					//a.setBalance(a.getBalance()-transferInQuestion.getAmount());
-					//b.setBalance(b.getBalance()+transferInQuestion.getAmount());
-					//bankService.updateAccount(a, user.getToken());
-					//bankService.updateAccount(b, user.getToken());
-					//transferInQuestion.setTransferStatus("Approved");
-					//bankService.updateTransferStatus(transferInQuestion, user.getToken());
-					//out.println("Transfer approved.");
-					out.println("Not implemented.");
+					Account a = bankService.getAccountByUserId(user.getUser().getId(), user.getToken());
+					if(transferInQuestion.getAmount() >= a.getBalance()){
+						throw new NotEnoughDoughException();
+					}
+					Account b = bankService.getAccountByUserId(transferInQuestion.getUserToId(), user.getToken());
+
+					a.setBalance(a.getBalance()-transferInQuestion.getAmount());
+					b.setBalance(b.getBalance()+transferInQuestion.getAmount());
+					bankService.updateAccount(a, user.getToken());
+					bankService.updateAccount(b, user.getToken());
+					transferInQuestion.setTransferStatus("Approved");
+					bankService.updateTransferStatus(transferInQuestion, user.getToken());
+					out.println("Transfer approved.");
+
 				}
 				else if(input.equals("2")){
 					transferInQuestion.setTransferStatus("Rejected");
@@ -406,8 +406,6 @@ public class ConsoleService {
 			catch (NotEnoughDoughException e){
 				out.println("You do not have enough money to accept this transaction.");
 			}
-
-			//bankService.updateTransferStatus(transfer, user.getToken());
 		}
 	}
 

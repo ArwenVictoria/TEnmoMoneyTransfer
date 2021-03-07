@@ -34,7 +34,7 @@ public class BankController {
 
     @RequestMapping(path = "/{user_id}/accounts", method = RequestMethod.GET)
     public Account getAccountById(@PathVariable long user_id) throws AccountDoesNotExistException {
-        Account a = accountDAO.findById(user_id);
+        Account a = accountDAO.findByUserId(user_id);
         if(a == null){
             throw new AccountDoesNotExistException();
         }
@@ -45,12 +45,28 @@ public class BankController {
 
     @RequestMapping(path = "/{user_id}/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfers(@PathVariable long user_id){
-        return transferDAO.getAllTransfers(user_id);
+        Account account = accountDAO.findByUserId(user_id);
+        List<Transfer> transfers = transferDAO.getAllTransfers(account.getAccount_id());
+        for (Transfer t: transfers) {
+            t.setUserFromId(accountDAO.getUserIdFromAccountId(t.getAccountFromId()));
+            t.setUserToId(accountDAO.getUserIdFromAccountId(t.getAccountToId()));
+            t.setUserFromName(userDAO.findUserNameById(t.getUserFromId()));
+            t.setUserToName(userDAO.findUserNameById(t.getUserToId()));
+        }
+        return transfers;
     }
 
     @RequestMapping(path = "/{user_id}/transfers/pending", method = RequestMethod.GET)
     public List<Transfer> getPendingTransfers(@PathVariable long user_id){
-        return transferDAO.getPendingTransfers(user_id);
+        Account account = accountDAO.findByUserId(user_id);
+        List<Transfer> transfers = transferDAO.getPendingTransfers(account.getAccount_id());
+        for (Transfer t: transfers) {
+            t.setUserFromId(accountDAO.getUserIdFromAccountId(t.getAccountFromId()));
+            t.setUserToId(accountDAO.getUserIdFromAccountId(t.getAccountToId()));
+            t.setUserFromName(userDAO.findUserNameById(t.getUserFromId()));
+            t.setUserToName(userDAO.findUserNameById(t.getUserToId()));
+        }
+        return transfers;
     }
 
     @RequestMapping(path = "/transfers/{transfer_id}", method = RequestMethod.GET)

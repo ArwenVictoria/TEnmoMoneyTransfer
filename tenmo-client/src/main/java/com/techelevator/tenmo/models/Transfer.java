@@ -8,9 +8,17 @@ public class Transfer {
 
     String transferStatus;
 
-    String toUser;
+    long accountToId;
 
-    String fromUser;
+    long accountFromId;
+
+    long userToId;
+
+    long userFromId;
+
+    String userToName;
+
+    String userFromName;
 
     double amount;
 
@@ -20,8 +28,8 @@ public class Transfer {
     public Transfer(String transferType, String transferStatus, String toUser, String fromUser, double amount) {
         this.transferType = transferType;
         this.transferStatus = transferStatus;
-        this.toUser = toUser;
-        this.fromUser = fromUser;
+        this.userToName = toUser;
+        this.userFromName = fromUser;
         this.amount = amount;
     }
 
@@ -49,12 +57,12 @@ public class Transfer {
         this.transferStatus = transferStatus;
     }
 
-    public String getToUser() {
-        return toUser;
+    public String getUserToName() {
+        return userToName;
     }
 
-    public void setToUser(String toUser) {
-        this.toUser = toUser;
+    public void setUserToName(String userToName) {
+        this.userToName = userToName;
     }
 
     public double getAmount() {
@@ -65,12 +73,44 @@ public class Transfer {
         this.amount = amount;
     }
 
-    public String getFromUser() {
-        return fromUser;
+    public String getUserFromName() {
+        return userFromName;
     }
 
-    public void setFromUser(String fromUser) {
-        this.fromUser = fromUser;
+    public void setUserFromName(String userFromName) {
+        this.userFromName = userFromName;
+    }
+
+    public long getAccountToId() {
+        return accountToId;
+    }
+
+    public void setAccountToId(long accountToId) {
+        this.accountToId = accountToId;
+    }
+
+    public long getAccountFromId() {
+        return accountFromId;
+    }
+
+    public void setAccountFromId(long accountFromId) {
+        this.accountFromId = accountFromId;
+    }
+
+    public long getUserToId() {
+        return userToId;
+    }
+
+    public void setUserToId(long userToId) {
+        this.userToId = userToId;
+    }
+
+    public long getUserFromId() {
+        return userFromId;
+    }
+
+    public void setUserFromId(long userFromId) {
+        this.userFromId = userFromId;
     }
 
     public String printTransfer(String currentUserName){
@@ -78,11 +118,11 @@ public class Transfer {
 
         output+= transferID + " ";
 
-        if(currentUserName.equals(toUser)){
-            output += "         From: " + fromUser;
+        if(currentUserName.equals(userToName)){
+            output += "         From: " + userFromName;
         }
         else{
-            output += "         To: " + toUser;
+            output += "         To: " + userToName;
         }
 
         output += "                 $ " + amount;
@@ -95,8 +135,8 @@ public class Transfer {
                 "-------------------------------------------";
 
         output += "\nTransfer Id: " + transferID;
-        output += "\nFrom: " + fromUser;
-        output += "\nTo: " + toUser;
+        output += "\nFrom: " + userFromName;
+        output += "\nTo: " + userToName;
         output += "\nType: " + transferType;
         output += "\nStatus: " + transferStatus;
         output += "\nAmount: " + amount + "\n";
