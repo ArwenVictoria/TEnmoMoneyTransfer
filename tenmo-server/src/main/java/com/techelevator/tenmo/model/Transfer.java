@@ -8,6 +8,14 @@ public class Transfer {
 
     long transferID;
 
+    long accountToId;
+
+    long accountFromId;
+
+    long userToId;
+
+    long userFromId;
+
     @NotEmpty
     @NotBlank
     String transferType;
@@ -18,11 +26,11 @@ public class Transfer {
 
     @NotEmpty
     @NotBlank
-    String fromUser;
+    String userFromName;
 
     @NotEmpty
     @NotBlank
-    String ToUser;
+    String userToName;
 
     @Positive
     double amount;
@@ -51,12 +59,12 @@ public class Transfer {
         this.transferStatus = transferStatus;
     }
 
-    public String getFromUser() {
-        return fromUser;
+    public String getUserFromName() {
+        return userFromName;
     }
 
-    public void setFromUser(String fromUser) {
-        this.fromUser = fromUser;
+    public void setUserFromName(String userFromName) {
+        this.userFromName = userFromName;
     }
 
     public double getAmount() {
@@ -67,11 +75,43 @@ public class Transfer {
         this.amount = amount;
     }
 
-    public String getToUser() {
-        return ToUser;
+    public String getUserToName() {
+        return userToName;
     }
 
-    public void setToUser(String toUser) {
-        this.ToUser = toUser;
+    public void setUserToName(String userToName) {
+        this.userToName = userToName;
+    }
+
+    public long getAccountToId() {
+        return accountToId;
+    }
+
+    public void setAccountToId(long accountToId) {
+        this.accountToId = accountToId;
+    }
+
+    public long getAccountFromId() {
+        return accountFromId;
+    }
+
+    public void setAccountFromId(long accountFromId) {
+        this.accountFromId = accountFromId;
+    }
+
+    public long getUserToId() {
+        return userToId;
+    }
+
+    public void setUserToId(long userToId) {
+        this.userToId = userToId;
+    }
+
+    public long getUserFromId() {
+        return userFromId;
+    }
+
+    public void setUserFromId(long userFromId) {
+        this.userFromId = userFromId;
     }
 }

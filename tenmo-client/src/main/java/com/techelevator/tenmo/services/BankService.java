@@ -23,7 +23,7 @@ public class BankService {
         restTemplate = new RestTemplate();
     }
 
-    public Account getAccountById(long id, String token){
+    public Account getAccountByUserId(long id, String token){
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(token);

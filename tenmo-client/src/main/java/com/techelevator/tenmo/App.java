@@ -22,7 +22,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private static final String MAIN_MENU_OPTION_REQUEST_BUCKS = "Request TE bucks";
 	private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
 	private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
-	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
+	private static final String MAIN_MENU_OPTION_SEND_STATEMENT = "Get an email of your bank statement";
+	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MAIN_MENU_OPTION_SEND_STATEMENT,MENU_OPTION_EXIT };
 	
     private AuthenticatedUser currentUser;
     private ConsoleService console;
@@ -66,6 +67,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 				requestBucks();
 			} else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
 				login();
+			} else if(MAIN_MENU_OPTION_SEND_STATEMENT.equals(choice)) {
+				sendStatement();
 			} else if(MENU_OPTION_EXIT.equals(choice)) {
 				System.exit(0); 
 			}
@@ -73,10 +76,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewCurrentBalance() {
-
-
-		console.printBalance(bankService.getAccountById(currentUser.getUser().getId(), currentUser.getToken())); //
-
+		console.printBalance(bankService.getAccountByUserId(currentUser.getUser().getId(), currentUser.getToken())); //
 	} 
 	
 
@@ -90,13 +90,15 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks() {
-
-		console.transferMenu(bankService.getAccountById(currentUser.getUser().getId(), currentUser.getToken()), currentUser); //
-
+		console.transferMenu(bankService.getAccountByUserId(currentUser.getUser().getId(), currentUser.getToken()), currentUser); //
 	}
 
 	private void requestBucks() {
 		console.requestMenu(currentUser);
+	}
+
+	private void sendStatement(){
+    	console.emailStatement(currentUser);
 	}
 	
 	private void exitProgram() {
