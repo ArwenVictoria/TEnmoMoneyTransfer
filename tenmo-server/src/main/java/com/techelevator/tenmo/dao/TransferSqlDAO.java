@@ -23,7 +23,7 @@ public class TransferSqlDAO implements TransferDAO{
     public List<Transfer> getAllTransfers(long account_id){
         List<Transfer> output = new ArrayList<>();
         String sqlGetAllFromTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
-                "USING(transfer_status_id) WHERE account_from = ? OR account_to = ?";
+                "USING(transfer_status_id) WHERE account_from = ? OR account_to = ? ORDER BY transfer_id";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sqlGetAllFromTransfers, account_id, account_id);
         while (result.next()){
             output.add(mapRowToTransfer(result));
@@ -65,7 +65,7 @@ public class TransferSqlDAO implements TransferDAO{
     public List<Transfer> getPendingTransfers(long account_id){
         List<Transfer> transfers = new ArrayList<>();
         String sqlGetPendingTransfers = "SELECT * FROM transfers JOIN transfer_types USING(transfer_type_id) JOIN transfer_statuses " +
-                "USING(transfer_status_id) WHERE account_from = ? AND transfer_status_id = (SELECT transfer_status_id FROM transfer_statuses WHERE transfer_status_desc = 'Pending')";
+                "USING(transfer_status_id) WHERE account_from = ? AND transfer_status_id = (SELECT transfer_status_id FROM transfer_statuses WHERE transfer_status_desc = 'Pending') ORDER BY transfer_id";
 
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sqlGetPendingTransfers, account_id);
 
