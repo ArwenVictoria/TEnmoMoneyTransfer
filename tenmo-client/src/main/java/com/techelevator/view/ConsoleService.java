@@ -543,6 +543,8 @@ public class ConsoleService {
 		if (input.equals("0")){
 			return;
 		}
+		out.println("This will take a couple seconds...");
+		out.println("Don't hold your breath");
 		out.println(emailService.sendEmail(subject, body, input));
 		out.println("Press any key to return to main menu.");
 		in.nextLine();
