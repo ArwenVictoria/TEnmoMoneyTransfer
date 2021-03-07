@@ -520,6 +520,22 @@ public class ConsoleService {
 			body += ("Nothing to see here!");
 		}
 
+		body += "\n-----------------------------------------------------\n";
+		body += "                 Rejected Transfers\n";
+		body += "-----------------------------------------------------\n";
+		printed = false;
+
+		for (Transfer t:transfers){
+			if(t.getTransferStatus().equals("Rejected")) {
+				body += t.printTransfer(user.getUser().getUsername()) + "\n";
+				printed = true;
+			}
+		}
+
+		if(!printed){
+			body += ("Nothing to see here!");
+		}
+
 		EmailService emailService = new EmailService();
 
 		out.println("Please enter your email address, or 0 to cancel:");
