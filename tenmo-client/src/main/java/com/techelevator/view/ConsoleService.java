@@ -222,7 +222,7 @@ public class ConsoleService {
 
 			while(true) {
 				if(transfers.length==0){
-					out.println("You have no transfers yet");
+					out.println("Nothing to see here!");
 					in.nextLine();
 					return;
 				}
@@ -247,7 +247,7 @@ public class ConsoleService {
 					for (Transfer t : transfers) {
 						if (choice == t.getTransferID()) {
 							out.println(t.printTransferDetails());
-							out.println("\nPress enter to return to transfer menu.");
+							out.println("\nPress any key to return to transfer menu.");
 							printedDetails = true;
 							in.nextLine();
 						}
@@ -393,7 +393,7 @@ public class ConsoleService {
 					throw new TransferDoesNotExistException();
 				}
 
-				out.println("Press 1 to accept, 2 to decline, enter to return to menu.");
+				out.println("Press 1 to accept, 2 to decline, any other key to return to menu.");
 
 				input = in.nextLine();
 				if(input.equals("1")){
@@ -455,7 +455,7 @@ public class ConsoleService {
 		}
 		out.println(emailService.sendEmail(subject, body, input));
 		out.println("Press any key to return to main menu.");
-		in.next();
+		in.nextLine();
 	}
 
 
