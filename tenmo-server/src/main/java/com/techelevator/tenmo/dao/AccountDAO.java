@@ -7,12 +7,12 @@ import com.techelevator.tenmo.model.Account;
 
 public interface AccountDAO {
 
-	Account findById(long user_id);
+	Account findByUserId(long user_id);
 	
 	List<Account> findAll();
 
 	void updateAccountBalance(Account account);
 
-	long getUserId(long accountId);
+	long getUserIdFromAccountId(long accountId);
 
 }
